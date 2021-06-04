@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 app = Flask(__name__)
 
 """
@@ -39,8 +39,26 @@ def goodbye_var(var):
 def show_float(floatvar):
     return 'Float is %f' % floatvar
 
-if __name__ == '__main__':
-   app.run(debug = True)
+# url_for() function is very useful for dynamically building a URL for a specific function
+# The function accepts the name of a function as first argument, and one or more keyword arguments,
+# each corresponding to the variable part of URL.
+@app.route('/admin')
+def hello_admin():
+   return 'Hello Admin'
+
+@app.route('/guest/<guest>')
+def hello_guest(guest):
+   return 'Hello %s as Guest' % guest
+
+# redirect will change the url 
+@app.route('/language/<language>')
+def set_language(language):
+    if language =='finnish':
+        return redirect(url_for('hello_suomi'))
+    elif language == 'german':
+       return redirect(url_for('hello_deutsch'))
+    else:
+        return redirect(url_for('hello_guest',guest = language))
 
 if __name__ == '__main__':
    app.run(debug = True)
